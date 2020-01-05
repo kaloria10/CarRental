@@ -46,6 +46,49 @@
         
         
     }
+
+    function displayCar($type) {
+        global $link;
+
+        if ($type == 'cars') {
+            $whereClause = "";
+        }
+        $query = "SELECT * FROM cars 
+         JOIN brands ON cars.carBrand = brands.id";
+        
+        $result = mysqli_query($link, $query);
+
+
+        if (mysqli_num_rows($result) == 0) {
+            echo "Nie ma nic do wyswietlenia";
+        } else {
+            while ($row = mysqli_fetch_assoc($result)) {
+                
+                echo "
+                            <div class='card'>
+                                <div class='carImg'>
+                                <img src='img/".$row['carImage']."' class='card-img-top car' alt='car'>
+                                </div>
+                                    <div class='card-body'>
+                                        <h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5>
+                                        <ul>
+                                            <li class='specIco'><img class='sm-icon' alt='ilosc osob' src='img/people.svg'>".$row['seatingCapacity']."</li>
+                                            <li class='specIco'><img class='sm-icon' alt='paliwo' src='img/fuel.svg'>".$row['fuelType']."</li>
+                                            <li class='specIco'><img class='sm-icon' alt='skrzynia biegów' src='img/shift.svg'>".$row['transmission']."</li>
+                                        <ul>
+                                    <p class='card-text'>This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    <p class='card-text'><small class='text-muted'>Last updated 3 mins ago</small></p>
+                                    </div>
+                                <a href='#' class='btn btn-primary'>Go somewhere</a>
+                            </div>
+                        ";
+            
+                
+
+            }
+        }
+
+    }
     
     /*function displayFields($type) {
         

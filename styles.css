@@ -41,6 +41,20 @@ body {
     display: inline-block;
 }
 
+.sm-icon {
+    height:36px;
+}
+.carImg {
+    height:240px;
+}
+ul {
+    list-style-type: none;
+    padding-inline-start: 20px;
+}
+
+.specIco {
+    display:inline;
+}
 /*
 main>.container {
     padding: 60px 15px 0;
