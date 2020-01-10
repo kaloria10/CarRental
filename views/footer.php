@@ -33,15 +33,21 @@
       </div>
       <div class="modal-footer">
           <a id="toggleLogin">Rejestracja</a>
+          
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
         <button type="button" id="loginSignupButton" class="btn btn-primary">Zaloguj się</button>
       </div>
     </div>
   </div>
+  
 </div>
-
-    <script>
+    
+    </div>
+  </div>
+</div>
+<script>
         $("#toggleLogin").click(function() {
+          
             //jeżeli element o id="loginActive" przyjmię wartość 1 to:
             if ($("#loginActive").val() == "1") {
                 
@@ -58,6 +64,20 @@
             }
             
         })
+        
+        /*$(".carInfo").click(function() {
+          $.ajax({
+            type: "POST",
+            url: "views/car.php?action=showCarInfo", 
+            data: "carId=" + $(this).attr("data-carId"),
+            success: function(result) {
+              alert(result);
+              window.location.assign("http://localhost/carrental/index.php?page=car");   
+              
+            }  
+        })
+        })
+        */
 
         $("#loginSignupButton").click(function() {
         
@@ -77,11 +97,10 @@
         })
         
     })
+
+    
     
     </script>
-    </div>
-  </div>
-</div>
   </body>
 </html>
 

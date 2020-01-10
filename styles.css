@@ -42,7 +42,7 @@ body {
 }
 
 .sm-icon {
-    height:36px;
+    height:30px;
 }
 .carImg {
     height:240px;
@@ -55,6 +55,20 @@ ul {
 .specIco {
     display:inline;
 }
+
+.card {
+    display:inline-block;
+    width:350px;
+    margin:8px;  
+}
+
+.car {
+    background-color: #f7f7f9;
+}
+
+
+
+
 /*
 main>.container {
     padding: 60px 15px 0;

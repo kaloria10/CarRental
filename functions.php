@@ -46,6 +46,7 @@
         
         
     }
+    
 
     function displayCar($type) {
         global $link;
@@ -53,11 +54,27 @@
         if ($type == 'cars') {
             $whereClause = "";
         }
+        else if ($type == 'male') {
+            
+            $whereClause = " WHERE category = 1";
+        }
+        else if ($type == 'srednie') {
+            
+            $whereClause = " WHERE category = 2";
+        }
+        else if ($type == 'dostawcze') {
+            
+            $whereClause = " WHERE category = 3";
+        }
         $query = "SELECT * FROM cars 
-         JOIN brands ON cars.carBrand = brands.id";
+         LEFT JOIN brands ON cars.carBrand = brands.brandId 
+         LEFT JOIN categories ON cars.category = categories.categoryId ".$whereClause."";
         
-        $result = mysqli_query($link, $query);
+        /*$reviewQuery = "SELECT COUNT(review) FROM reviews WHERE"*/
 
+        $result = mysqli_query($link, $query);
+        
+        
 
         if (mysqli_num_rows($result) == 0) {
             echo "Nie ma nic do wyswietlenia";
@@ -67,24 +84,23 @@
                 echo "
                             <div class='card'>
                                 <div class='carImg'>
-                                <img src='img/".$row['carImage']."' class='card-img-top car' alt='car'>
+                                    <img src='img/".$row['carImage']."' class='img-fluid' alt='car'>
                                 </div>
                                     <div class='card-body'>
-                                        <h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5>
-                                        <ul>
-                                            <li class='specIco'><img class='sm-icon' alt='ilosc osob' src='img/people.svg'>".$row['seatingCapacity']."</li>
-                                            <li class='specIco'><img class='sm-icon' alt='paliwo' src='img/fuel.svg'>".$row['fuelType']."</li>
-                                            <li class='specIco'><img class='sm-icon' alt='skrzynia biegów' src='img/shift.svg'>".$row['transmission']."</li>
-                                        <ul>
-                                    <p class='card-text'>This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                    <p class='card-text'><small class='text-muted'>Last updated 3 mins ago</small></p>
+                                            <h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5>
+                                            <ul>
+                                                <li class='specIco'><img class='sm-icon' alt='ilosc osob' src='img/people.svg'>".$row['seatingCapacity']."</li>
+                                                <li class='specIco'><img class='sm-icon' alt='paliwo' src='img/fuel.svg'>".$row['fuelType']."</li>
+                                                <li class='specIco'><img class='sm-icon' alt='skrzynia biegów' src='img/shift.svg'>".$row['transmission']."</li>
+                                            </ul>
+                                        <p class='card-text'>Kategoria: ".$row['name']."</p>
+                                        <p class='card-text'>Cena wypożyczenia: ".$row['pricePerDay']."</p>
+                                        <a href=?page=car&IDSAMOCHODU=".$row['id'].">Więcej ".$row['id']."</a>
+                                        <a href='#' class='btn btn-outline-success rounded-pill'>Wypożycz</a>
+                                    
                                     </div>
-                                <a href='#' class='btn btn-primary'>Go somewhere</a>
                             </div>
                         ";
-            
-                
-
             }
         }
 
@@ -274,4 +290,3 @@
   
 
 */
-?>
