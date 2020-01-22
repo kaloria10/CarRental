@@ -10,6 +10,9 @@
     else if ($_GET['page'] == 'home') {
         include("views/home.php");
     }
+    else if ($_GET['page'] == 'profile') {
+        include("views/profile.php");
+    }
     include("views/footer.php");
 
     

@@ -90,7 +90,64 @@
         
         
         
+    } else if ($_GET['action'] == "rentCar") {
+
+        $rentError="";
+        
+        
+        if (!isset($_SESSION['id'])) {
+            $rentError = "Musisz sie zalogować żeby móc wypożyczać! <button class='closeLoginModal' data-toggle='modal' data-target='#myModal'>Kliknij tutaj aby się zalogowować</button>";
+        } else if (!$_POST['timeFrom']) {
+            $rentError = "Musisz wybrać od kiedy chcesz wypożyczyć samochód";
+        } else if (!$_POST['timeTo']) {
+            $rentError = "Musisz wybrać do kiedy chcesz wypożyczyć samochód";
+        } 
+        
+        if ($rentError != "") {
+            
+            echo $rentError;
+            exit();
+        } else {
+
+        $start_date = "'".$_POST['timeFrom']."'";
+        $end_date = "'".$_POST['timeTo']."'";
+
+        //$query = "SELECT * FROM leased WHERE carId = '". mysqli_real_escape_string($link, $_POST['car_id'])."' LIMIT 1";
+        $query =  "SELECT * FROM `leased` WHERE `carId` = '". mysqli_real_escape_string($link, $_POST['car_id'])."' 
+                                AND ((`timeFrom`>".$start_date." AND `timeTo`<".$end_date.") 
+                                OR (`timeFrom`<".$start_date." AND `timeTo`>".$end_date.") 
+                                OR (`timeFrom`<".$end_date." AND `timeTo`>".$end_date.") 
+                                OR (`timeFrom`<".$start_date." AND `timeTo`>".$start_date."))";
+        
+        
+                                
+
+        $result = mysqli_query($link, $query);
+        
+            if (mysqli_num_rows($result) > 0) {
+                $rentError = "Ten samochód jest już wypożyczony w tym czasie";
+                } else {
+                    $rentQuery = "INSERT INTO `leased` (`rentId`, `carId`, `renterId`, `timeFrom`, `timeTo`, `priceTotal`) VALUES (NULL, '". mysqli_real_escape_string($link, $_POST['car_id'])."', '" . $_SESSION['id'] . "', '". mysqli_real_escape_string($link, $_POST['timeFrom'])."', '". mysqli_real_escape_string($link, $_POST['timeTo'])."', '100')";
+                    mysqli_query($link, $rentQuery);
+                    
+                    echo 111;
+                }
+
+
+            if ($rentError != "") {
+            
+                echo $rentError;
+                exit();
+                
+            }
+            
+
+
+
+        }
     }
 
+
+    
     
 ?>

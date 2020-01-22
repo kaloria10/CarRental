@@ -1,7 +1,7 @@
 
 <div class="container car my-2 shadow-sm p-3 mb-5  rounded">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-4">
             <?php
                 
                 
@@ -22,11 +22,24 @@
                    while ($row = mysqli_fetch_assoc($result)) {
                        
                        echo "
-                            <div class='card'>
-                                <div class='carImg'>
+                                <div class='card'>
+                                
                                     <img src='img/".$row['carImage']."' class='img-fluid' alt='car'>
+                                
                                 </div>
                             </div>
+                            <div class='col-md-4'></div>
+                            <div class='col-md-4'>
+                            <h5 class='p-5'> ".$row['brandName']." ".$row['carModel']."</h5>    
+                                
+                                <ul class='list-group list-group-flush'>
+                                    <li class='list-group-item'>".$row['seatingCapacity']."</li>
+                                    <li class='list-group-item'>".$row['name']."</li>
+                                    <li class='list-group-item'>Vestibulum at eros</li>
+                                    <a href='#' data-target='#rentModal' data-car_id='".$row['id']."' data-car_details='".$row['brandName']."  ". $row['carModel']."' class='btn btn-success rounded-pill rentThisCarButton'>Wypożycz</a>
+                                </ul>   
+                            </div>
+
                             ";
                    }
                 }
@@ -39,8 +52,7 @@
             
           
             ?>
-        </div>
-        <div class="col-sm-6">
-            <p>tutduduua</p>
-        </div>
-    </div>
+        
+    
+        
+</div>

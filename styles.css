@@ -4,10 +4,12 @@
     
 }
 
-#loginAlert {
-    
-    display:none;
-    
+#loginAlert { 
+    display:none;  
+}
+
+#rentAlert { 
+    display:none;  
 }
 
 .container2 {
@@ -56,7 +58,7 @@ ul {
     display:inline;
 }
 
-.card {
+.home {
     display:inline-block;
     width:350px;
     margin:8px;  
@@ -66,7 +68,14 @@ ul {
     background-color: #f7f7f9;
 }
 
+.list-group-item test {
+   color:#d34d3d;
+}
 
+.car-name {
+    color: #000000; 
+    text-decoration: none;
+}
 
 
 /*

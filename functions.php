@@ -27,7 +27,7 @@
             $whereClause = "WHERE id = ". mysqli_real_escape_string($link, $_SESSION['id']);
         }
 
-        $query = "SELECT * FROM uzytkownicy ".$whereClause."";
+        $query = "SELECT * FROM `users` ".$whereClause."";
         
         $result = mysqli_query($link, $query);
 
@@ -46,6 +46,55 @@
         
         
     }
+
+    function displayUserRents($type) {
+        
+        global $link;
+        
+        if ($type == 'myRents') {
+            $whereClause = "WHERE renterId = ". mysqli_real_escape_string($link, $_SESSION['id']);
+        
+
+        $query = "SELECT * FROM cars 
+        LEFT JOIN brands ON cars.carBrand = brands.brandId 
+        LEFT JOIN categories ON cars.category = categories.categoryId 
+        LEFT JOIN leased ON cars.id = leased.carId ".$whereClause."";
+               
+               $result = mysqli_query($link, $query);
+               
+
+               if (mysqli_num_rows($result) == 0) {
+                   echo "Nie ma nic do wyswietlenia";
+               } else {
+                   while ($row = mysqli_fetch_assoc($result)) {
+                       
+                       echo "
+                       <div class='card home'>
+                       <div class='carImg'>
+                           <img src='img/".$row['carImage']."' class='img-fluid' alt='car'>
+                       </div>
+                           <div class='card-body'>
+                                   <h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5>
+                                   <ul>
+                                       <li class='specIco'><img class='sm-icon' alt='ilosc osob' src='img/people.svg'>".$row['seatingCapacity']."</li>
+                                       <li class='specIco'><img class='sm-icon' alt='paliwo' src='img/fuel.svg'>".$row['fuelType']."</li>
+                                       <li class='specIco'><img class='sm-icon' alt='skrzynia biegów' src='img/shift.svg'>".$row['transmission']."</li>
+                                   </ul>
+                               <p>Wypożyczony od :".$row['timeFrom']." do ".$row['timeTo']." </p>
+                           </div>
+                   </div>
+               
+                            ";
+                   }
+                }
+                
+                
+
+            }
+        }
+        
+        
+    
     
 
     function displayCar($type) {
@@ -82,12 +131,12 @@
             while ($row = mysqli_fetch_assoc($result)) {
                 
                 echo "
-                            <div class='card'>
+                            <div class='card home'>
                                 <div class='carImg'>
-                                    <img src='img/".$row['carImage']."' class='img-fluid' alt='car'>
+                                    <a href=?page=car&IDSAMOCHODU=".$row['id']."><img src='img/".$row['carImage']."' class='img-fluid' alt='car'></a>
                                 </div>
                                     <div class='card-body'>
-                                            <h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5>
+                                            <a class='car-name' href=?page=car&IDSAMOCHODU=".$row['id']."><h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5></a>
                                             <ul>
                                                 <li class='specIco'><img class='sm-icon' alt='ilosc osob' src='img/people.svg'>".$row['seatingCapacity']."</li>
                                                 <li class='specIco'><img class='sm-icon' alt='paliwo' src='img/fuel.svg'>".$row['fuelType']."</li>
@@ -95,8 +144,8 @@
                                             </ul>
                                         <p class='card-text'>Kategoria: ".$row['name']."</p>
                                         <p class='card-text'>Cena wypożyczenia: ".$row['pricePerDay']."</p>
-                                        <a href=?page=car&IDSAMOCHODU=".$row['id'].">Więcej ".$row['id']."</a>
-                                        <a href='#' class='btn btn-outline-success rounded-pill'>Wypożycz</a>
+                                        <a href=?page=car&IDSAMOCHODU=".$row['id']." class='btn btn-success rounded-pill'>Więcej</a>
+                                        <a href='#' data-toggle='modal' data-target='#rentModal' data-car_id='".$row['id']."' data-car_details='".$row['brandName']."  ". $row['carModel']."' class='btn btn-success rounded-pill rentThisCarButton'>Wypożycz</a>
                                     
                                     </div>
                             </div>

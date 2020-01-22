@@ -1,0 +1,61 @@
+/*if (result == "1") {
+                
+                window.location.assign("http://localhost/carrental/index.php?page=profile");    
+
+            } else {
+              $("#loginAlert").html(result).show();
+            }
+            } 
+
+
+
+            $.ajax({
+            type: "POST",
+            url: "actions.php?action=rentCar", 
+            data: "timeFrom=" + $("#timeFrom").val() + "&timeTo=" + $("#timeTo").val() + "&car_id=" + car_id,
+            success: function(result) {
+              alert(result)
+            } 
+        })
+
+
+
+
+
+
+        SELECT * FROM `leased` WHERE `carId` = 1 
+                                AND (`timeFrom`>2020-01-16 15:20:00 AND `timeTo`<".$end_date.") 
+                                OR (`timeFrom`<".$start_date." AND `timeTo`>".$end_date.") 
+                                OR (`timeFrom`<".$end_date." AND `timeTo`>".$end_date.") 
+                                OR (`timeFrom`<".$start_date." AND `timeTo`>".$start_date.");
+
+
+
+
+      SELECT * FROM `leased` WHERE `carId` = 1 
+      AND `timeFrom` < '2020-01-16T19:30' AND `timeTo` > ''2020-01-17T16:20''
+
+
+
+
+      $query =  "SELECT * FROM `leased` WHERE `carId` = 1 
+                                AND ((`timeFrom`>'2020-01-16T19:30' AND `timeTo`<'2020-01-17T16:20') 
+                                OR (`timeFrom`<'2020-01-16T19:30' AND `timeTo`>'2020-01-17T16:20') 
+                                OR (`timeFrom`<'2020-01-17T16:20' AND `timeTo`>'2020-01-17T16:20') 
+                                OR (`timeFrom`<'2020-01-16T19:30' AND `timeTo`>'2020-01-16T19:30'))"
+
+
+
+
+
+INSERT INTO `leased` (`rentId`, `carId`, `renterId`, `timeFrom`, `timeTo`, `priceTotal`) VALUES (NULL, '1', '1', '2020-02-04 12:00:00', '2020-02-06 13:00:00', '100');
+\
+
+
+
+if (!isset($_SESSION['id'])) {
+            $rentError = "Musisz sie zalogować żeby móc!";
+
+
+
+SELECT * FROM cars LEFT JOIN brands ON cars.carBrand = brands.brandId LEFT JOIN categories ON cars.category = categories.categoryId LEFT JOIN leased ON cars.id = leased.carId WHERE `renterId` = 2
