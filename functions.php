@@ -18,7 +18,7 @@
         
     }
 
-
+    
     function displayProfiles($type) {
         
         global $link;
@@ -37,7 +37,7 @@
         } else {
             while ($row = mysqli_fetch_assoc($result)) {
 
-                echo "Twój email to: " .$row['email']."<br />";
+                echo "Jesteś zalogowany jako: " .$row['email']."";
                 
                 
 
@@ -55,32 +55,46 @@
             $whereClause = "WHERE renterId = ". mysqli_real_escape_string($link, $_SESSION['id']);
         
 
-        $query = "SELECT * FROM cars 
+        $query = "SELECT *, (DATEDIFF(`timeTo`,`timeFrom`) * `pricePerDay`) AS priceCount FROM cars 
         LEFT JOIN brands ON cars.carBrand = brands.brandId 
         LEFT JOIN categories ON cars.category = categories.categoryId 
-        LEFT JOIN leased ON cars.id = leased.carId ".$whereClause."";
+        LEFT JOIN leased ON cars.id = leased.carId 
+        LEFT JOIN users ON leased.renterId = users.id ".$whereClause."";
+
                
                $result = mysqli_query($link, $query);
                
 
                if (mysqli_num_rows($result) == 0) {
-                   echo "Nie ma nic do wyswietlenia";
+                   echo "Nie ma nic do wyswietlenia <a href='?page=home'>Kliknij tutaj by zobaczyć jakie samochody możesz wypożyczyć</a>";
                } else {
                    while ($row = mysqli_fetch_assoc($result)) {
                        
                        echo "
+                       
                        <div class='card home'>
                        <div class='carImg'>
                            <img src='img/".$row['carImage']."' class='img-fluid' alt='car'>
                        </div>
                            <div class='card-body'>
-                                   <h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5>
-                                   <ul>
-                                       <li class='specIco'><img class='sm-icon' alt='ilosc osob' src='img/people.svg'>".$row['seatingCapacity']."</li>
-                                       <li class='specIco'><img class='sm-icon' alt='paliwo' src='img/fuel.svg'>".$row['fuelType']."</li>
-                                       <li class='specIco'><img class='sm-icon' alt='skrzynia biegów' src='img/shift.svg'>".$row['transmission']."</li>
-                                   </ul>
-                               <p>Wypożyczony od :".$row['timeFrom']." do ".$row['timeTo']." </p>
+                           <a class='car-name' href=?page=car&IDSAMOCHODU=".$row['id']."><h5 class='card-title'>".$row['brandName']."  ". $row['carModel']."</h5></a>
+                                   <table class='table table-bordered'>
+                                   <tbody>
+                                     <tr>
+                                       <th scope='row'>Od</th>
+                                       <td>".$row['timeFrom']."</td>
+                                     </tr>
+                                     <tr>
+                                       <th scope='row'>Do</th>
+                                       <td>".$row['timeTo']."</td>
+                                     </tr>
+                                     <tr>
+                                       <th scope='row'>Do zapłaty</th>
+                                       <td>".$row['priceCount']."</td>
+                                     </tr>
+                                   </tbody>
+                                 </table>   
+                                 <a href='#' data-target='#opinionModal' data-toggle='modal' data-user_email='".$row['email']."' data-car_id2='".$row['id']."' data-car_details='".$row['brandName']."  ". $row['carModel']."' class='btn btn-success rounded-pill px-4 addReviewButton'>Dodaj opinię</a> 
                            </div>
                    </div>
                
@@ -92,16 +106,20 @@
 
             }
         }
+    
+
         
+            
         
     
     
 
-    function displayCar($type) {
+    function displayCar($type, $orderMethod="rosnaco") {
         global $link;
 
         if ($type == 'cars') {
             $whereClause = "";
+            $sortBy = "";
         }
         else if ($type == 'male') {
             
@@ -115,9 +133,15 @@
             
             $whereClause = " WHERE category = 3";
         }
+        
+        if ($orderMethod == "malejaco") {
+            $sortBy = "ORDER BY `brandName` DESC ";
+        }else {
+            $sortBy = "ORDER BY `brandName` ASC";
+        }
         $query = "SELECT * FROM cars 
          LEFT JOIN brands ON cars.carBrand = brands.brandId 
-         LEFT JOIN categories ON cars.category = categories.categoryId ".$whereClause."";
+         LEFT JOIN categories ON cars.category = categories.categoryId ".$whereClause." ".$sortBy."";
         
         /*$reviewQuery = "SELECT COUNT(review) FROM reviews WHERE"*/
 
@@ -142,8 +166,19 @@
                                                 <li class='specIco'><img class='sm-icon' alt='paliwo' src='img/fuel.svg'>".$row['fuelType']."</li>
                                                 <li class='specIco'><img class='sm-icon' alt='skrzynia biegów' src='img/shift.svg'>".$row['transmission']."</li>
                                             </ul>
-                                        <p class='card-text'>Kategoria: ".$row['name']."</p>
-                                        <p class='card-text'>Cena wypożyczenia: ".$row['pricePerDay']."</p>
+                                            <table class='table table-bordered'>
+                                                <tbody>
+                                                    <tr>
+                                                    <th scope='row'>Kategoria:</th>
+                                                    <td>".$row['name']."</td>
+                                                    </tr>
+                                                    <tr>
+                                                    <th scope='row'>Cena za dzień</th>
+                                                    <td>".$row['pricePerDay']." zł</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table> 
+                                        
                                         <a href=?page=car&IDSAMOCHODU=".$row['id']." class='btn btn-success rounded-pill'>Więcej</a>
                                         <a href='#' data-toggle='modal' data-target='#rentModal' data-car_id='".$row['id']."' data-car_details='".$row['brandName']."  ". $row['carModel']."' class='btn btn-success rounded-pill rentThisCarButton'>Wypożycz</a>
                                     
@@ -154,188 +189,33 @@
         }
 
     }
-    
-    /*function displayFields($type) {
+    function displayOpinion($type) {
         
         global $link;
         
-        if ($type == 'public') {
-            $whereClause = "";
-        }
-        
-            
-        $query = "SELECT * FROM boiska ".$whereClause." ORDER BY `miejscowosc` DESC LIMIT 10";
-        
-        $result = mysqli_query($link, $query);
+        if ($type == 'opinion') {
+            $whereOpinion = "WHERE carId = ".$_GET['IDSAMOCHODU'];
+                $query = "SELECT * FROM reviews 
+                LEFT JOIN users ON reviews.userEmail = users.email ".$whereOpinion."";
+               
 
-        if (mysqli_num_rows($result) == 0) {
-            echo "Nie ma żadnych boisk do wyświetlenia";
-        } else {
-            echo "<table class=table>";
-            echo "<thead class=thead-dark>";
-            echo "<tr>";
-            echo "<th>Nr boiska</th>";
-            echo "<th>Miejscowość</th>";
-            echo "<th>Ulica</th>";
-            echo "<th>Nr_lokalu</th>";
-            echo "<th>Kod pocztowy</th>";
-            echo "<th>Godzina otwarcia</th>";
-            echo "<th>Godzina zamknięcia</th>";
-            echo "<th>Typ nawierzchni</th>";
-            echo "<th>oświetlenie</th>";
-            echo "<th>Opis</th>";
-            echo "</tr>";
-            while ($row = mysqli_fetch_assoc($result)) {
-                
-              
-                
-                echo "<tr>";
-                echo "<td>".$row['id_boiska']."</td>";
-                echo "<td>".$row['miejscowosc']."</td>";
-                echo "<td>".$row['ulica']."</td>";
-                echo "<td>".$row['nr_lokalu']."</td>";
-                echo "<td>".$row['kod_pocztowy']."</td>";
-                echo "<td>".$row['godzina_otwarcia']."</td>";
-                echo "<td>".$row['godzina_zamkniecia']."</td>";
-                echo "<td>".$row['typ_nawierzchni']."</td>";
-                echo "<td>".$row['oswietlenie']."</td>";
-                echo "<td>".$row['opis_boiska']."</td>";
-                echo "</tr>";
-                
-            }
-            echo "</table>";
+               
+               $result = mysqli_query($link, $query);
+               
+
+               if (mysqli_num_rows($result) == 0) {
+                   echo "Nie ma nic do wyswietlenia";
+               } else {
+                   while ($row = mysqli_fetch_assoc($result)) {
+                       
+                       echo "<div class='border border-primary shadow-sm p-3 mb-5 rounded'>
+                       <h5 style='display:inline-block'>".$row['email']."</h5> <p style='display:inline-block' class='font-italic'> ".$row['reviewDate']." </p>
+                       <p> ".$row['reviewContent']." </p>
+                       </div>";
+                   } 
         }
     }
 
-    function displayGames($type) {
-        
-        global $link;
-        
-        if ($type == 'public') {
-            $whereClause = "";
-        }
-
-        //$query = "SELECT * FROM mecze ".$whereClause." ORDER BY `id_meczu` ASC LIMIT 10";
-        $query2 = "SELECT id_meczu, h_rozpoczecia, h_zakonczenia, miejsca, opis, data_meczu, mecze.id_umiejetnosci, boiska.id_boiska, ulica, nr_lokalu, kod_pocztowy, miejscowosc, godzina_otwarcia, godzina_zamkniecia, opis_boiska, typ_nawierzchni, oswietlenie, umiejetnosci.id_umiejetnosci, umiejetnosci_gry
-            FROM boiska 
-            JOIN mecze 
-            ON boiska.id_boiska = mecze.id_boiska
-            JOIN umiejetnosci
-            ON mecze.id_umiejetnosci = umiejetnosci.id_umiejetnosci".$whereClause."";
-        $result = mysqli_query($link, $query2);
-
-        if (mysqli_num_rows($result) == 0) {
-            echo "Nie ma żadnych meczów do wyświetlenia";
-        } else {
-            echo "<table class=table>";
-            echo "<thead class=thead-dark>";
-            echo "<tr>";
-            echo "<th>Mecz</th>";
-            echo "<th>Dnia</th>";
-            echo "<th>Godzina rozpoczęcia</th>";
-            echo "<th>Godzina zakończenia</th>";
-            echo "<th>Miejsc</th>";
-            echo "<th>Umiejętności</th>";
-            echo "<th>Opis</th>";
-            echo "</tr>";
-            while ($row = mysqli_fetch_assoc($result)) {
-                
-                echo "<tr style=font-weight:bold>";
-                echo "<td>".$row['id_meczu']."</td>";
-                echo "<td>".$row['data_meczu']."</td>";
-                echo "<td>".$row['h_rozpoczecia']."</td>";
-                echo "<td>".$row['h_zakonczenia']."</td>";
-                echo "<td>".$row['miejsca']."</td>";
-                echo "<td>".$row['umiejetnosci_gry']."</td>";
-                echo "<td>".$row['opis']."</td>";
-                
-                echo "<tr>";
-                echo "<thead class=thead-light>";
-                echo "<tr>";
-                echo "<th>Boisko:</th>";
-                echo "<th>".$row['miejscowosc'].", ".$row['ulica']." ".$row['nr_lokalu']."</th>";
-                echo "<th>".$row['typ_nawierzchni']."</th>";
-                echo "<th></th>";
-                echo "<th></th>";
-                echo "<th></th>";
-                echo "<th></th>";
-
-                echo "</tr>";
-                
-            }
-            echo "</table>";
-        }
-    }
+}
 
 
-    function displayUserGames($type) {
-        
-        global $link;
-        
-        if ($type == 'userGames') {
-            $whereClause = "";
-        }
-
-        //$query = "SELECT * FROM mecze ".$whereClause." ORDER BY `id_meczu` ASC LIMIT 10";
-        $query2 = "SELECT mecze.id_meczu, mecze.h_rozpoczecia, mecze.h_zakonczenia, mecze.miejsca, mecze.opis, mecze.data_meczu, mecze.id_umiejetnosci, boiska.id_boiska, boiska.ulica, boiska.nr_lokalu, boiska.kod_pocztowy, boiska.miejscowosc, boiska.godzina_otwarcia, boiska.godzina_zamkniecia, boiska.opis_boiska, boiska.typ_nawierzchni, boiska.oswietlenie, umiejetnosci.id_umiejetnosci, umiejetnosci.umiejetnosci_gry, mecze_zawodnicy.id_meczu, mecze_zawodnicy.id_uzytkownika
-            FROM boiska 
-            JOIN mecze 
-            ON boiska.id_boiska = mecze.id_boiska
-            JOIN umiejetnosci
-            ON mecze.id_umiejetnosci = umiejetnosci.id_umiejetnosci
-            JOIN mecze_zawodnicy ON mecze.id_meczu = mecze_zawodnicy.id_meczu
-            WHERE mecze_zawodnicy.id_uzytkownika = '".$_SESSION['id']."'";
-            
-        $result = mysqli_query($link, $query2);
-
-        if (mysqli_num_rows($result) == 0) {
-            echo "  Nie zapisałeś się jeszcze na żaden mecz.";
-        } else {
-            echo "<table class=table>";
-            echo "<thead class=thead-dark>";
-            echo "<tr>";
-            echo "<th>Mecz</th>";
-            echo "<th>Dnia</th>";
-            echo "<th>Godzina rozpoczęcia</th>";
-            echo "<th>Godzina zakończenia</th>";
-            echo "<th>Miejsc</th>";
-            echo "<th>Umiejętności</th>";
-            echo "<th>Opis</th>";
-            echo "</tr>";
-            while ($row = mysqli_fetch_assoc($result)) {
-                
-                echo "<tr style=font-weight:bold>";
-                echo "<td>".$row['id_meczu']."</td>";
-                echo "<td>".$row['data_meczu']."</td>";
-                echo "<td>".$row['h_rozpoczecia']."</td>";
-                echo "<td>".$row['h_zakonczenia']."</td>";
-                echo "<td>".$row['miejsca']."</td>";
-                echo "<td>".$row['umiejetnosci_gry']."</td>";
-                echo "<td>".$row['opis']."</td>";
-                echo "<tr>";
-                echo "<thead class=thead-light>";
-                echo "<tr>";
-                echo "<th>Boisko:</th>";
-                echo "<th>".$row['miejscowosc'].", ".$row['ulica']." ".$row['nr_lokalu']."</th>";
-                echo "<th>".$row['typ_nawierzchni']."</th>";
-                echo "<th></th>";
-                echo "<th></th>";
-                echo "<th></th>";
-                echo "<th></th>";
-                echo "</tr>";
-                
-            }
-            echo "</table>";
-        }
-    }
-
-        
-    
-
-    
-
-    
-
-  
-
-*/

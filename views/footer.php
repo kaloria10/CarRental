@@ -54,7 +54,7 @@
       <div class="modal-body">
 
         <div class="alert alert-danger" id="rentAlert"></div>
-        <input type="text" id="idHolder" name="idHolder" value="">
+        <input type="hidden" id="idHolder" name="idHolder" value="">
         <p>Wypożyczasz auto: <span id="carDetails"></span>
             <form>
               <div class="form-group">
@@ -74,6 +74,49 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+<div class="modal fade" id="opinionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Dodaj opinię</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="alert alert-danger" id="opinionAlert"></div>
+        <input type="text" id="idOpinionHolder" name="idOpinionHolder" value="">
+        <input type="text" id="emailHolder" name="emailHolder" value="">
+        <p>Oceniasz auto: <span id="carOpinionDetails"></span>
+            <form>
+              <div class="form-group">
+                <label for="opinion">Dodaj opinię</label>
+                <textarea class="form-control" id="opinionContent" rows="3"></textarea>
+              </div>
+            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+        <button type="button" id="confirmOpinion" class="btn btn-primary">Zatwierdź</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
     
     </div>
   </div>
@@ -124,6 +167,15 @@
       $('#carDetails').html( car_details );
       $('#idHolder').val( car_id );
     })
+
+    $(".addReviewButton").click(function() {
+      var car_details = $(this).data('car_details');
+      var car_id2 = $(this).data('car_id2');
+      var user_email = $(this).data('user_email');
+      $('#carOpinionDetails').html( car_details );
+      $('#idOpinionHolder').val( car_id2 );
+      $('#emailHolder').val( user_email );
+    })
     
 
     $("#confirmRent").click(function() {
@@ -132,12 +184,30 @@
             url: "actions.php?action=rentCar", 
             data: "timeFrom=" + $("#timeFrom").val() + "&timeTo=" + $("#timeTo").val() + "&car_id=" + $("#idHolder").val(),
             success: function(result) {
-              if (result == "1") {
+              if (result == "11") {
                 
                 window.location.assign("http://localhost/carrental/index.php?page=profile");    
 
             } else {
               $("#rentAlert").html(result).show();
+            }
+            } 
+        })
+    
+    })
+
+    $("#confirmOpinion").click(function() {
+      $.ajax({
+            type: "POST",
+            url: "actions.php?action=addOpinion", 
+            data: "reviewContent=" + $("#opinionContent").val() + "&carId=" + $("#idOpinionHolder").val() + "&user_email=" + $("#emailHolder").val(),
+            success: function(result) {
+              if (result == "1") {
+                
+                window.location.assign("http://localhost/carrental/index.php?page=car&IDSAMOCHODU=" + $("#idOpinionHolder").val(),);   //POPRAWIĆ TO 
+
+            } else {
+              $("#opinionAlert").html(result).show();
             }
             } 
         })
@@ -152,6 +222,8 @@
     $(".test").click(function() {
       $('#rentModal').modal('show');
     })
+
+    
     
     
     </script>

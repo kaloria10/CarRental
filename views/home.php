@@ -7,34 +7,36 @@
 <div class="container ">
   <div class="navbar justify-content-center">
       <form method="post">
-        <input type="submit" name="wszystkie" value="Wszystkie"/>
-        <input type="submit" name="male" value="Małe"/>
-        <input type="submit" name="srednie" value="Średnie"/>
-        <input type="submit" name="dostawcze" value="Dostawcze"/>
+        <input class="btn btn-primary rounded-pill shadow-sm" type="submit" name="wszystkie" value="Wszystkie"/>
+        <input class="btn btn-primary rounded-pill shadow-sm " type="submit" name="male" value="Małe"/>
+        <input class="btn btn-primary rounded-pill shadow-sm " type="submit" name="srednie" value="Średnie"/>
+        <input class="btn btn-primary rounded-pill shadow-sm " type="submit" name="dostawcze" value="Dostawcze"/> <br />
     </form>
+    <form>
+    <!--
+    <select>
+      <option name="alfabetycznie" value="alfabetycznie">Rosnąco</option>
+      <option name="malejaco" value="malejaco">Malejąco</option>
+    </select>
+    </form>
+    -->
     
   </div>
   <div class="row">
     <div class="col align-items-center">        
         <?php
 
-        if (isset($_POST['wszystkie'])) {
-          displayCar("cars");
+        
+        if (isset($_POST['male'])) {
+            displayCar("male", "");
+        } else if (isset($_POST['srednie'])) {
+            displayCar("srednie", "");
+        } else if (isset($_POST['dostawcze'])) {
+            displayCar("dostawcze", "");
+        } else {
+          
+            displayCar("cars", "");
         }
-        else if (isset($_POST['male'])) {
-          displayCar("male");
-        }
-        else if (isset($_POST['srednie'])) {
-          displayCar("srednie");
-        }
-        else if (isset($_POST['dostawcze'])) {
-          displayCar("dostawcze");
-        }
-
-      
-      
-    
-
         
 
         ?>

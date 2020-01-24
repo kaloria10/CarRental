@@ -59,3 +59,63 @@ if (!isset($_SESSION['id'])) {
 
 
 SELECT * FROM cars LEFT JOIN brands ON cars.carBrand = brands.brandId LEFT JOIN categories ON cars.category = categories.categoryId LEFT JOIN leased ON cars.id = leased.carId WHERE `renterId` = 2
+
+
+
+
+function countPrice($type) {
+        
+            global $link;
+            
+            if ($type == 'myRents') {
+                $whereClause = "WHERE renterId = ". mysqli_real_escape_string($link, $_SESSION['id']);
+                $days = "SELECT *, (DATEDIFF(`timeTo`,`timeFrom`) * `pricePerDay`) AS priceCount FROM `leased`
+                    LEFT JOIN cars ON cars.id = leased.carId ".$whereClause."";
+                    $result = mysqli_query($link, $days);
+               
+
+                    if (mysqli_num_rows($result) == 0) {
+                        echo "Nie ma nic do wyswietlenia";
+                    } else {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo "<p>Cena :".$row['priceCount']."</p>"; 
+                       
+                    }
+            
+            
+            }
+        }
+    }
+
+
+
+
+    INSERT INTO `reviews` (`carId`, `userEmail`, `reviewContent`, `reviewDate`) VALUES ('1', 'karol@email.com', 'Świetny samochód. Wypożyczenie przebiegło bardzo sprawnie. POLECAM!', CURRENT_TIMESTAMP);
+
+
+
+
+
+    </div>
+                            </div>
+                            </div>
+                            </div>
+                            <div class='row'>
+                                <div class='container car my-2 shadow-sm p-3 mb-5  rounded'>
+                                    <h2>Opinie</h2>
+                                    <div class='border border-primary shadow-sm p-3 mb-5 rounded'>
+                                        <h5 style='display:inline-block'>".$row['user_name']."</h5> <p style='display:inline-block' class='font-italic'> ".$row['reviewDate']." </p>
+                                        <p> ".$row['reviewContent']." </p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                             $whereClause = "WHERE cars.id = ".$_GET['IDSAMOCHODU'];
+                $query = "SELECT * FROM cars 
+                LEFT JOIN brands ON cars.carBrand = brands.brandId 
+                LEFT JOIN categories ON cars.category = categories.categoryId 
+                LEFT JOIN reviews ON cars.id = reviews.carId
+                LEFT JOIN users ON reviews.userEmail = users.email

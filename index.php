@@ -12,6 +12,9 @@
     }
     else if ($_GET['page'] == 'profile') {
         include("views/profile.php");
+    } 
+    else {
+        include("views/home.php");   
     }
     include("views/footer.php");
 

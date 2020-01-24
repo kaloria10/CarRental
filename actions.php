@@ -70,7 +70,7 @@
                     echo 1;
                     
                     $_SESSION['id'] = $row['id'];
-
+                    
                     
                 } else {
                     
@@ -96,7 +96,7 @@
         
         
         if (!isset($_SESSION['id'])) {
-            $rentError = "Musisz sie zalogować żeby móc wypożyczać! <button class='closeLoginModal' data-toggle='modal' data-target='#myModal'>Kliknij tutaj aby się zalogowować</button>";
+            $rentError = "Musisz sie zalogować żeby móc wypożyczać! <button class='closeLoginModal'>Kliknij tutaj aby się zalogowować</button>";
         } else if (!$_POST['timeFrom']) {
             $rentError = "Musisz wybrać od kiedy chcesz wypożyczyć samochód";
         } else if (!$_POST['timeTo']) {
@@ -130,7 +130,7 @@
                     $rentQuery = "INSERT INTO `leased` (`rentId`, `carId`, `renterId`, `timeFrom`, `timeTo`, `priceTotal`) VALUES (NULL, '". mysqli_real_escape_string($link, $_POST['car_id'])."', '" . $_SESSION['id'] . "', '". mysqli_real_escape_string($link, $_POST['timeFrom'])."', '". mysqli_real_escape_string($link, $_POST['timeTo'])."', '100')";
                     mysqli_query($link, $rentQuery);
                     
-                    echo 111;
+                    echo 11;
                 }
 
 
@@ -145,8 +145,30 @@
 
 
         }
-    }
+    } else if ($_GET['action'] == "addOpinion") {
+        
+        $opinionError ="";
 
+        if (!$_POST['reviewContent']) {
+            $opinionError = "Musisz wpisać treść opinii";
+        } 
+        
+        if ($opinionError != "") {
+            
+            echo $opinionError;
+            exit();
+        } else {
+
+        $reviewContent = "'".$_POST['reviewContent']."'";
+        $carId = "'".$_POST['carId']."'";
+        $userEmail = "'".$_POST['user_email']."'";
+
+        $addOpinionQuery = "INSERT INTO `reviews` (`carId`, `userEmail`, `reviewContent`, `reviewDate`) VALUES ($carId,$userEmail, $reviewContent, CURRENT_TIMESTAMP)";
+        
+        mysqli_query($link, $addOpinionQuery);
+        echo 1;
+    }
+}
 
     
     

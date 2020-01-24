@@ -30,15 +30,23 @@
                     <a class="nav-link" href="?page=fields">link2</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="?page=profile">link3</a>
+                    <a class="nav-link" href="?page=profile">Twój profil</a>
                 </li>
             </ul>
+            
             <!--
             <div class="form-inline pull-xs-right">
-                <input class="form-control mr-sm-2" type="text" name="q" id="search" placeholder="Wyszukaj" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Wyszukaj</button>
+                
+                <?php /*
+                if (!isset($_SESSION['id'])) {
+                    echo"<a href='?page=profile' class='nick'>"; displayProfiles('profiles'); echo "</a>";
+                } else {
+                    echo "";
+                } */
+                ?>
             </div>
             -->
+            
             <div class="form-inline pull-xs-right">
 
                 
