@@ -96,7 +96,7 @@
         
         
         if (!isset($_SESSION['id'])) {
-            $rentError = "Musisz sie zalogować żeby móc wypożyczać! <button class='closeLoginModal'>Kliknij tutaj aby się zalogowować</button>";
+            $rentError = "Musisz sie zalogować żeby móc wypożyczać! <button class='closeLoginModal' data-target='#myModal' data-toggle='modal'>Kliknij tutaj aby się zalogowować</button>";
         } else if (!$_POST['timeFrom']) {
             $rentError = "Musisz wybrać od kiedy chcesz wypożyczyć samochód";
         } else if (!$_POST['timeTo']) {
@@ -168,7 +168,14 @@
         mysqli_query($link, $addOpinionQuery);
         echo 1;
     }
+}   else if ($_GET['action'] == "acceptReview") {
+        $acceptReviewQuery = "UPDATE `reviews` SET `reviewAccepted` = '". mysqli_real_escape_string($link, $_POST['reviewAccepted'])."'  
+        WHERE `reviews`.`review_id` = '". mysqli_real_escape_string($link, $_POST['review_id'])."'";
+        mysqli_query($link, $acceptReviewQuery);
 }
+
+
+
 
     
     

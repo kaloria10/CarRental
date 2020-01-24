@@ -119,3 +119,8 @@ function countPrice($type) {
                 LEFT JOIN categories ON cars.category = categories.categoryId 
                 LEFT JOIN reviews ON cars.id = reviews.carId
                 LEFT JOIN users ON reviews.userEmail = users.email
+
+
+
+
+                            $countReviewsQuery = "SELECT COUNT(reviews_id) AS NumberOfReviews FROM reviews WHERE carId = " . $row['id'] . "";

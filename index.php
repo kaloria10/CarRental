@@ -12,7 +12,10 @@
     }
     else if ($_GET['page'] == 'profile') {
         include("views/profile.php");
-    } 
+    }
+    else if ($_GET['page'] == 'moderation') {
+        include("views/moderation.php");
+    }
     else {
         include("views/home.php");   
     }

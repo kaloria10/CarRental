@@ -32,6 +32,15 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="?page=profile">Twój profil</a>
                 </li>
+                
+                <?php 
+                $_SESSION['id'] = (isset($_SESSION['id']) ? $_SESSION['id'] : NULL);
+                if ($_SESSION['id']==2) {
+                    echo "<li class='nav-item active'>
+                        <a class='nav-link' href='?page=moderation'>Panel administratora</a>
+                    </li>";
+                }
+                ?>
             </ul>
             
             <!--

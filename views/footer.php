@@ -195,16 +195,18 @@
         })
     
     })
-
+    
+    
     $("#confirmOpinion").click(function() {
+      
       $.ajax({
             type: "POST",
             url: "actions.php?action=addOpinion", 
             data: "reviewContent=" + $("#opinionContent").val() + "&carId=" + $("#idOpinionHolder").val() + "&user_email=" + $("#emailHolder").val(),
             success: function(result) {
               if (result == "1") {
+                window.location.assign("http://localhost/carrental/index.php?page=car&IDSAMOCHODU=" + $("#idOpinionHolder").val() + "&alert=1");
                 
-                window.location.assign("http://localhost/carrental/index.php?page=car&IDSAMOCHODU=" + $("#idOpinionHolder").val(),);   //POPRAWIĆ TO 
 
             } else {
               $("#opinionAlert").html(result).show();
@@ -214,14 +216,29 @@
     
     })
     
-    $(".closeLoginModal").click(function() {
-      $('#MyModal').modal('show');
-      $('#rentModal').modal('hide');
-    });
+    
 
     $(".test").click(function() {
       $('#rentModal').modal('show');
     })
+
+    $(".acceptReview").click(function() {
+      var opinion_id = $(this).data('opinion_id');
+      $.ajax({
+            type: "POST",
+            url: "actions.php?action=acceptReview", 
+            data: "reviewAccepted=1" + "&review_id=" + opinion_id,
+            success: function(result) {
+              alert("Zaakceptowano opinę.");
+            } 
+        })
+    
+    })
+
+    $("#test2").click(function() {
+      $('#MyModal').modal('show');
+      
+    });
 
     
     

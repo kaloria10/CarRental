@@ -1,5 +1,5 @@
 
-<div class="container car my-2 shadow-sm p-3 mb-5  rounded">
+<div class="container car my-2 shadow-sm p-3 mb-5  rounded ">
     <div class="row">
         <div class="col-md-4">
             <?php
@@ -64,7 +64,7 @@
                                 </tbody>
                             </table>
                             <a href='#' data-toggle='modal' data-target='#rentModal' data-car_id='".$row['id']."' data-car_details='".$row['brandName']."  ". $row['carModel']."' class='btn btn-success rounded-pill rentThisCarButton'>Wypożycz</a>
-
+                            
 
                             </div>
 
@@ -87,8 +87,23 @@
 </div>
 </div>
 <div class='row'>
-    <div class="container car my-2 shadow-sm p-3 mb-5  rounded">
+    <div class="container car my-2 shadow-sm p-3 mb-5  rounded ">
         <h2>Opinie</h2>
+
+        <?php 
+        $_GET['alert'] = (isset($_GET['alert']) ? $_GET['alert'] : '0');
+        
+        if($_GET['alert']==1) {
+            echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>Twoja opinia została dodana. Po zaakceptowaniu jej przez moderatora, zostanie wyświetlona.
+            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+            </div>";
+        } else {
+            echo "";
+        }
+        
+        ?>
+
+        
         <?php displayOpinion("opinion") ?>
     </div>
 </div>
